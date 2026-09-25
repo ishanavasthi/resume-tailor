@@ -38,6 +38,7 @@ BOX_RE = re.compile(
 ERROR_RE = re.compile(r"^! (.+)$", re.M)
 ERROR_LINE_RE = re.compile(r"^l\.(\d+)", re.M)
 TIMEOUT_SECONDS = 300
+SAME_DIR_MESSAGE = "the build directory must not be the source's directory; the source would be overwritten"
 INSTALL_HINTS = """No TeX engine found. Install one:
   macOS:   brew install tectonic   (or MacTeX for pdflatex)
   Linux:   sudo apt-get install texlive-latex-extra texlive-fonts-recommended
@@ -117,12 +118,23 @@ def build(source, engine: str = "auto", out_dir=None) -> BuildResult:
     if not source.is_file():
         raise BuildError(f"no such file: {source}")
     out_dir = Path(out_dir).resolve() if out_dir else Path(tempfile.mkdtemp(prefix="resume-build-"))
-    if out_dir == source.parent:
-        raise BuildError("the build directory must not be the source's directory; the source would be overwritten")
+    # samefile catches a case-flipped or hard-linked path that the string compare misses
+    # on case-insensitive filesystems; the string compare covers an out dir not yet created.
+    if out_dir == source.parent or (out_dir.exists() and out_dir.samefile(source.parent)):
+        raise BuildError(SAME_DIR_MESSAGE)
     engine = find_engine(engine)
-    out_dir.mkdir(parents=True, exist_ok=True)
     work = out_dir / source.name
-    work.write_text(prepare_source(source.read_text(encoding="utf-8"), engine), encoding="utf-8")
+    try:
+        text = source.read_text(encoding="utf-8")
+        out_dir.mkdir(parents=True, exist_ok=True)
+        if work.exists() and work.samefile(source):
+            raise BuildError(SAME_DIR_MESSAGE)
+        work.write_text(prepare_source(text, engine), encoding="utf-8")
+        stale_log = out_dir / f"{source.stem}.log"
+        if stale_log.exists():
+            stale_log.unlink()  # a log left by an earlier build would give a stale first_error
+    except (OSError, UnicodeDecodeError) as err:
+        raise BuildError(f"cannot prepare the build copy of {source.name}: {err}")
     passes = 1 if engine == "tectonic" else 2  # tectonic reruns by itself; pdflatex needs a second pass for hyperref
     proc = None
     for _ in range(passes):

@@ -72,3 +72,16 @@ def test_build_reports_overfull_with_source_line(tmp_path):
     src, line = overfull_tex(tmp_path)
     result = builder.build(src, ENGINE, out_dir=tmp_path / "out")
     assert any(w.kind == "Overfull" and w.line == line for w in result.warnings)
+
+
+def test_refuses_a_case_flipped_source_directory(tmp_path):
+    (tmp_path / "Aa").mkdir()
+    if not (tmp_path / "aa").exists():
+        pytest.skip("filesystem is case-sensitive")
+    src_dir = tmp_path / "Src"
+    src_dir.mkdir()
+    src = make_tex(src_dir, "r.tex")
+    before = hashlib.sha256(src.read_bytes()).hexdigest()
+    with pytest.raises(builder.BuildError, match="must not be the source"):
+        builder.build(src, ENGINE, out_dir=tmp_path / "sRC")
+    assert hashlib.sha256(src.read_bytes()).hexdigest() == before
