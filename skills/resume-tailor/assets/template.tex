@@ -1,0 +1,189 @@
+%-------------------------
+% Resume in Latex
+% Author : Jake Gutierrez
+% Based off of: https://github.com/sb2nov/resume
+% License : MIT
+% Modified for resume-tailor: margins widened by 0.25in per side,
+% example content replaced with a fictional person (Avery Sample).
+%------------------------
+
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage{latexsym}
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage{marvosym}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{verbatim}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+
+%----------FONT OPTIONS----------
+% sans-serif
+% \usepackage[sfdefault]{FiraSans}
+% \usepackage[sfdefault]{roboto}
+% \usepackage[sfdefault]{noto-sans}
+% \usepackage[default]{sourcesanspro}
+
+% serif
+% \usepackage{CormorantGaramond}
+% \usepackage{charter}
+
+
+\pagestyle{fancy}
+\fancyhf{} % clear all header and footer fields
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Adjust margins
+\addtolength{\oddsidemargin}{-0.75in}
+\addtolength{\evensidemargin}{-0.75in}
+\addtolength{\textwidth}{1.5in}
+\addtolength{\topmargin}{-.75in}
+\addtolength{\textheight}{1.5in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+% Sections formatting
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+% Ensure that generate pdf is machine readable/ATS parsable
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-2pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small#3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small#1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeProjectHeading}[2]{
+    \item
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \small#1 & #2 \\
+    \end{tabular*}\vspace{-7pt}
+}
+
+\newcommand{\resumeSubItem}[1]{\resumeItem{#1}\vspace{-4pt}}
+
+\renewcommand\labelitemii{$\vcenter{\hbox{\tiny$\bullet$}}$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=0.15in, label={}]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  RESUME STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING----------
+\begin{center}
+    \textbf{\Huge \scshape Avery Sample} \\ \vspace{4pt}
+    \small +1-555-010-0199 $|$
+    \href{mailto:avery@example.com}{\underline{avery@example.com}} $|$
+    \href{https://example.com}{\underline{Website}} $|$
+    \href{https://github.com/example}{\underline{GitHub}} $|$
+    \href{https://linkedin.com/in/example}{\underline{LinkedIn}}
+\end{center}
+
+%-----------EDUCATION-----------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {Example State University}{Springfield, USA}
+      {Bachelor of Science in Computer Science, GPA 3.7/4.0}{Aug. 2023 -- May 2027}
+  \resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {Software Engineering Intern}{May 2025 -- Aug. 2025}
+      {Example Logistics Co.}{Remote}
+      \resumeItemListStart
+        \resumeItem{Built a \textbf{FastAPI} service that batches shipment status updates, cutting hourly database writes by \textbf{40\%} in staging}
+        \resumeItem{Added \textbf{pytest} coverage for the routing module from 35\% to 80\%, catching two timezone bugs before release}
+        \resumeItem{Wrote the on-call runbook for the service and walked two new interns through their first deploy}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Teaching Assistant, Data Structures}{Jan. 2025 -- May 2025}
+      {Example State University}{Springfield, USA}
+      \resumeItemListStart
+        \resumeItem{Ran weekly lab sessions for 40 students and wrote autograded tests for six programming assignments}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------
+\section{Projects}
+    \resumeSubHeadingListStart
+
+      \resumeProjectHeading
+          {\textbf{ShelfScan: Barcode Inventory App} $|$ \href{https://github.com/example/shelfscan}{\underline{View Project}} $|$ \href{https://example.com/shelfscan}{\underline{Live Demo}}}{}
+          \resumeItemListStart
+            \item[] \small{A mobile-first web app that lets a small shop track stock by scanning barcodes with a phone camera.}
+            \resumeItem{Built the client in \textbf{React} and \textbf{TypeScript} with an offline queue that syncs scans once the phone reconnects}
+            \resumeItem{Designed a \textbf{PostgreSQL} schema with per-shop row isolation and wrote the migrations with \textbf{Alembic}}
+            \resumeItem{Deployed on \textbf{Docker} with a \textbf{GitHub Actions} pipeline that runs tests and type checks on every pull request}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{ForecastCheck: Weather Forecast Accuracy Tracker} $|$ \href{https://github.com/example/forecastcheck}{\underline{View Project}}}{}
+          \resumeItemListStart
+            \resumeItem{Collected daily forecasts from two public weather APIs for 30 cities and scored them against observed temperatures}
+            \resumeItem{Analysed error by forecast horizon in \textbf{pandas} and plotted the results in a \textbf{Jupyter} notebook}
+          \resumeItemListEnd
+
+      \resumeProjectHeading
+          {\textbf{StudyBuddy: Course Q\&A Chatbot} $|$ \href{https://github.com/example/studybuddy}{\underline{View Project}} $|$ \href{https://example.com/studybuddy-video}{\underline{Demo Video}}}{}
+          \resumeItemListStart
+            \resumeItem{Built a \textbf{LangChain} and \textbf{ChromaDB} retrieval pipeline over lecture notes that cites the source slide in every answer}
+          \resumeItemListEnd
+
+    \resumeSubHeadingListEnd
+
+%-----------TECHNICAL SKILLS-----------
+\section{Technical Skills}
+ \begin{itemize}[leftmargin=0.15in, label={}]
+    \small{\item{
+     \textbf{Languages}{: Python, TypeScript, JavaScript, Java, SQL} \\
+     \textbf{Frameworks}{: FastAPI, React, Node.js, LangChain, pytest} \\
+     \textbf{Tools}{: Git, Docker, GitHub Actions, PostgreSQL, ChromaDB, Jupyter} \\
+     \textbf{Coursework}{: Data Structures, Algorithms, Databases, Operating Systems, Machine Learning}
+    }}
+ \end{itemize}
+
+\end{document}
