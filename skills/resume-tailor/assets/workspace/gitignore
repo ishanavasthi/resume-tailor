@@ -1,0 +1,9 @@
+# LaTeX and preview byproducts
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*-page1.png
+.DS_Store
