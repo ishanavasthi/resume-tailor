@@ -43,7 +43,7 @@ is not one, ask the user where theirs is. If they have none, run setup.
 | gives a job description, a job link, or names a company and role | `references/tailor.md` |
 | has a resume that runs past one page | `references/overflow.md` |
 | built or shipped something new, or corrects a fact | `references/facts.md` |
-| asks to add, change, or remove content (a bullet, a skill, a project) on a resume already made | Back any new claim with a confirmed facts entry first. Edit the tailored copy for that company; edit a base only when the user asks for the base. Then `verify.py`, read the PNG, and re-save with `--save`. Steps: `references/tailor.md`, "Changing a resume after it is saved" |
+| asks to add, change, or remove content (a bullet, a skill, a project) on a resume already made | Back any new claim with a confirmed facts entry first. Edit the tailored copy (a new copy if it was already sent and this is a new application); edit a base only when the user asks for the base. Then `verify.py`, read the PNG, and re-save with `--save`. Steps: `references/tailor.md`, "Changing a resume after it is saved" |
 | asks what to build next, or how to close a gap | `references/project-ideas.md` |
 | asks to change a base itself | Only on that explicit request: edit the base, verify, update `notes/variants.md` |
 
@@ -56,7 +56,7 @@ Read `references/template.md` before the first `.tex` edit in a session.
 | `init_workspace.py DIR --name "First Last" [--from-template]` | Creates the workspace. Never overwrites. |
 | `build.py FILE.tex` | Compiles a temporary copy. Never touches the source. |
 | `verify.py FILE.tex --png preview.png [--save PDF]` | Every mechanical rule check (one page, no em-dash, no overfull or underfull boxes, no template placeholders), plus a PNG of page 1. `--save` copies the PDF only if all checks pass. |
-| `measure.py FILE.tex` | Lines per page, the text that spilled, slack, and short tails, for sizing trims. |
+| `measure.py FILE.tex [--capacity-lines LO-HI]` | Lines per page, the text that spilled, slack, and short tails, for sizing trims. |
 | `extract_pdf.py FILE.pdf` | Text from an old resume PDF, for setup. |
 
 Exit codes: `0` pass; `1` a check failed or the script refused (overflow, no text in the PDF,
@@ -66,7 +66,8 @@ machine-readable output.
 Always pass `--png preview.png` to `verify.py`, so the preview lands in the workspace root, where
 the workspace `.gitignore` ignores it. Without `--png` the image stays in a temporary directory
 outside the workspace. `build.py`, `verify.py`, and `measure.py` all compile into a temporary
-directory, by design; only `--save` and `--png` write into the workspace.
+directory, by design; only `verify.py --save`, `verify.py --png`, and `build.py --out DIR` write
+into the workspace.
 
 `verify.py`'s "no template placeholders" check fails on any non-comment line containing
 `Avery Sample` (the template's fictional name), `example.com`, or `TODO`. A FAIL there means

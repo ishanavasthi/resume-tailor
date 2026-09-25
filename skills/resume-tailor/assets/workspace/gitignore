@@ -6,4 +6,5 @@
 *.fdb_latexmk
 *.synctex.gz
 preview.png
+tailored/scratch/
 .DS_Store

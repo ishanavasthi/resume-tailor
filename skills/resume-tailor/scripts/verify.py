@@ -56,6 +56,7 @@ class Report:
     png: Optional[str]
     checks: List[Check]
     warnings: List[str] = field(default_factory=list)
+    skipped: List[str] = field(default_factory=list)
 
     @property
     def ok(self) -> bool:
@@ -141,16 +142,21 @@ def verify(tex, engine: str = "auto", allow_placeholders: bool = False, png=None
         Check("no overfull or underfull boxes", not result.warnings,
               "; ".join(str(w) for w in result.warnings)),
     ]
-    if not allow_placeholders:
+    skipped = []
+    if allow_placeholders:
+        skipped.append("no template placeholders")
+    else:
         holders = find_placeholders(tex_text)
         checks.append(Check("no template placeholders", not holders, _lines(holders)))
     png_path = render_png(result.pdf, png or Path(result.pdf).with_name(f"{tex.stem}-page1.png"))
-    return Report(str(tex), result.pdf, result.engine, png_path, checks, link_label_warnings(tex_text))
+    return Report(str(tex), result.pdf, result.engine, png_path, checks, link_label_warnings(tex_text),
+                  skipped)
 
 
 def format_report(report: Report) -> str:
     out = [f"{'PASS' if c.ok else 'FAIL'}  {c.name}" + (f": {c.detail}" if not c.ok and c.detail else "")
            for c in report.checks]
+    out.extend(f"SKIP  {name} (--allow-placeholders)" for name in report.skipped)
     out.extend(f"warning: {w}" for w in report.warnings)
     out.append(f"pdf: {report.pdf} (engine: {report.engine})")
     out.append(f"page 1 rendered: {report.png}")

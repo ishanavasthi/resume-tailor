@@ -12,9 +12,14 @@ It prints how many lines fell past page 1, the exact text that fell, and the sho
 whose last line holds only a few words. "It is a bit long" is not a measurement; "it is 6 lines
 over" is.
 
-Line counts come from the PDF's extracted text, so they are a close proxy, not exact. Section
-spacing and headings shift things slightly. Size each package with a line or two of margin, and
-confirm it by rebuilding.
+Line counts come from the PDF's extracted text, so they are a close proxy, not exact. The page
+holds an estimated 46-54 extracted lines depending on its headings; the build is the truth. If
+`notes/variants.md` records a `Full at` count for this base, pass it with `--capacity-lines`, and
+update it whenever a page fills.
+
+Leave the tailored `.tex` in its overflowing state while you size packages and wait, and never
+re-save the PDF: the saved PDF stays the previous one-page version. Say so in the report, and note
+it on the copy's row in `notes/variants.md`.
 
 ## 2. Report
 
@@ -38,6 +43,16 @@ Build packages from the cheapest cuts first:
 Protect whatever `notes/variants.md` marks as load-bearing. Never cut the only line carrying a
 credential without offering to fold it into a title (rule 10 in `rules.md`).
 
+Size every package by building it. Copy the tailored `.tex` into `tailored/scratch/` (the
+workspace `.gitignore` ignores it), apply the package to that copy, and run `verify.py` and
+`measure.py` on it; read its PNG. Leave a line or two of margin where possible; when the builds
+show a package fits with none, offer it and say "no margin". The copies in `tailored/scratch/`
+are for sizing only: delete them once the user has picked.
+
+When the user's own constraints ("do not drop anything", "keep every new bullet as its own
+line") rule out every package, say so first. Then offer packages that each relax exactly one of
+those constraints, and name the one each relaxes.
+
 A package reads like this:
 
 > **Package B, saves about 4 lines: keep every project, tighten instead.** Trim the short tails
@@ -50,7 +65,8 @@ Apply nothing until the user picks. If they want a mix, build that mix.
 
 ## 5. Apply and re-verify
 
-Apply the chosen package, run `verify.py` with `--png preview.png`, and read the PNG. If it
-still overflows, measure again and report; do not keep trimming on your own. If the user's
-choice reflects a standing rule ("always keep the statistics bullets"), record it under locked
-decisions in `notes/variants.md`.
+Apply the chosen package to the tailored copy, delete the scratch copies, run `verify.py` with
+`--png preview.png`, and read the PNG. Only when it passes, re-save the PDF with `--save`. If it
+still overflows, measure again and report; do not keep trimming on your own. Record the page's
+line count as `Full at` in `notes/variants.md`. If the user's choice reflects a standing rule
+("always keep the statistics bullets"), record it under locked decisions in `notes/variants.md`.

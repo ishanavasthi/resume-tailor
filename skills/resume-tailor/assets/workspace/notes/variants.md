@@ -5,8 +5,11 @@ another family. Add a new base only when a job description comes from a family n
 
 ## Bases
 
-| File | Role family | Page-1 lines (date) |
-|---|---|---|
+`Full at` is the extracted line count (from `measure.py`) at which this base, or a copy of it,
+last filled its page. Pass it to `measure.py --capacity-lines` instead of the default estimate.
+
+| File | Role family | Page-1 lines (date) | Full at |
+|---|---|---|---|
 
 ## Locked decisions
 

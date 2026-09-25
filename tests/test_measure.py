@@ -103,3 +103,17 @@ def test_short_tails_on_a_fitting_page_say_they_only_matter_when_trimming():
     tail = {"page": 1, "index": 3, "line": "dashboard)", "after": FULL}
     report = measure.format_report(one_page(tails=[tail]), (46, 48), 110)
     assert "only matter if you need to trim" in report
+
+
+@needs_engine
+def test_page_above_the_line_estimate_is_called_full_not_zero_slack(tmp_path):
+    proc = run_script("measure.py", make_tex(tmp_path, "resume.tex"), "--engine", ENGINE,
+                      "--capacity-lines", "10-12")
+    assert proc.returncode == 0, proc.stdout
+    assert "above the usual estimate: treat the page as full" in proc.stdout
+    assert "0-0 lines of slack" not in proc.stdout
+
+
+def test_default_line_estimate_is_46_to_54():
+    assert measure.DEFAULT_CAPACITY_LINES == (46, 54)
+    assert "--capacity-lines 46-54" in measure.__doc__

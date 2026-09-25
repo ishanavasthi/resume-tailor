@@ -41,7 +41,18 @@ def test_template_passes_when_placeholders_allowed(tmp_path):
     proc = run_script("verify.py", make_tex(tmp_path, "resume.tex"), "--engine", ENGINE,
                       "--allow-placeholders", "--json")
     assert proc.returncode == 0, proc.stdout
-    assert Path(json.loads(proc.stdout)["png"]).exists()
+    payload = json.loads(proc.stdout)
+    assert Path(payload["png"]).exists()
+    assert payload["skipped"] == ["no template placeholders"]
+
+
+@needs_engine
+def test_skipped_placeholder_check_is_named_in_the_text_report(tmp_path):
+    proc = run_script("verify.py", make_tex(tmp_path, "resume.tex"), "--engine", ENGINE,
+                      "--allow-placeholders")
+    assert proc.returncode == 0, proc.stdout
+    assert "SKIP  no template placeholders (--allow-placeholders)" in proc.stdout
+    assert "PASS  no template placeholders" not in proc.stdout
 
 
 @needs_engine

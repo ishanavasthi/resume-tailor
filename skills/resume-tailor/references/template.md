@@ -9,11 +9,17 @@ another engine. Never remove them from the source.
 
 ## Capacity
 
-About **105-113 characters** per full-width line and **46-48 lines** per page, counted the way
-`measure.py` counts (lines of extracted text). A bullet costs about one line per 105 characters.
-The name, the contact line, each section title, and each entry heading cost a line each.
-`measure.py` also prints the longest extracted line for reference. An entry heading with its
-date on the right extracts as one line and can run well past 113 characters; that is normal.
+About **105-113 characters** per full-width line and **46-54 lines** per page, counted the way
+`measure.py` counts (lines of extracted text). The line figure is an estimate: it shifts with how
+many section titles and entry headings the page has, and full pages on this template have held
+52-54 lines. The build is the truth: a page fits when `verify.py` says one page. Once a base (or
+a copy of it) fills its page, record that line count as `Full at` in `notes/variants.md` and
+pass it to `measure.py` with `--capacity-lines`, for example `--capacity-lines 52-54`.
+
+A bullet costs about one line per 105 characters. The name, the contact line, each section
+title, and each entry heading cost a line each. `measure.py` also prints the longest extracted
+line for reference. An entry heading with its date on the right extracts as one line and can run
+well past 113 characters; that is normal.
 
 ## Commands
 
@@ -53,3 +59,7 @@ and paths, `$|$` as the separator, and `--` for date ranges. Never `---`.
   text extraction does not see, so `measure.py` does not count it. Shorten the bullet by a word
   or two and rebuild.
 - Bold on every other word. Bold the one or two terms a reader should see first, no more.
+
+Text extraction can split a bold or small-caps word ("F rameworks", "Y AML") in the output of
+`measure.py`. That is an artifact of extraction, not a defect on the page, and `verify.py`'s
+checks do not depend on it.

@@ -51,8 +51,12 @@ The fields that do the most work:
 
 - **Honest ceiling.** The strongest true description, and the grander label it must never get.
   Write the tempting wrong label down explicitly; naming it is what stops the stretch.
-- **Numbers with a source.** A metric with no source (a test, a benchmark, a dashboard, an
-  employer report) does not go on a page.
+- **Numbers with a source.** Every number on the page needs a source: results and metrics, and
+  also scope and configuration figures (months, intervals, counts). A test, a benchmark, a
+  dashboard, or an employer report is a source, and so are the user's own words in this
+  session, recorded as such ("the user's own account, 2026-01-10"). A bullet whose work is
+  confirmed but whose number is not goes on the page without the number; the number stays
+  under **Pending** until it has a source.
 - **Not yet true.** Features that are planned, stubbed, disabled, or broken today. Code that is
   commented out is not a feature.
 - **Pending.** Things the user has mentioned that are not yet confirmed, or that lack what a

@@ -49,7 +49,9 @@ In the copy only:
   cares about most.
 - Swap in a different project from `notes/facts.md` when it fits better than one on the base.
 - Reorder the skills lines. Drop skills that do not matter for this role before adding new ones.
-- Keep every number exactly as the facts file states it.
+- Keep every number exactly as the facts file states it, attached to the same noun ("60
+  students" never becomes "60 projects"). A number with no source in the facts file stays off
+  the page, even when the work it describes goes on (`facts.md`, "Numbers with a source").
 
 Test every changed bullet: could the user defend this sentence, word for word, in an interview?
 
@@ -74,7 +76,8 @@ When `verify.py` passes and you have read the page:
 
 Then add a row to the tailored copies table in `notes/variants.md` with `Sent` set to "not
 sent", update `notes/roles.md` if you researched, and commit if the workspace is a git
-repository. When the user says they sent it, record the date in `Sent`.
+repository. When the user says they sent it, record the date in `Sent`. If the table has no
+`Sent` column (a workspace made by an older version of this skill), add it.
 
 ## 8. Report
 
@@ -89,10 +92,11 @@ bullet about X to the internship"):
 
 1. **Back it first.** Every new claim needs a confirmed facts entry (`facts.md`). If the facts
    file does not cover it, ask for what a bullet needs: what they did, when, and any number with
-   its source. Record what they said under that entry's **Pending** field, and write nothing on
-   the page until they confirm the updated entry. For a new project, follow "When the user
-   builds something new" in `facts.md`. If the only fact behind the request is already on the
-   page, say so instead of restating it in a second bullet.
+   its source. Record what they said under that entry's **Pending** field, and put on the page
+   only what they have confirmed: a bullet whose work is confirmed but whose number is not goes
+   on without the number, and the number stays under Pending. For a new project, follow "When
+   the user builds something new" in `facts.md`. If the only fact behind the request is already
+   on the page, say so instead of restating it in a second bullet.
 2. **Pick the file.** Edit a base only when the user asks for the base itself. Otherwise read the
    copy's `Sent` column in `notes/variants.md`:
    - **Not sent:** edit the tailored copy in place and re-save over the same PDF.
@@ -101,11 +105,15 @@ bullet about X to the internship"):
      overwrite the sent one. The sent copy stays as the record.
    - **Sent, and the user wants it corrected and resent:** edit it in place and re-save over the
      same PDF, and say in the report that the old PDF was replaced.
-   If `Sent` is empty or missing, ask the user which case applies.
+   If `Sent` is empty, missing, or "unknown", ask the user which case applies. If an older
+   workspace's tailored copies table has no `Sent` column, add it.
+   Before overwriting a PDF that was sent, copy it to `pdfs/sent/<same name>-<sent date>.pdf`
+   (for example `pdfs/sent/Avery_Sample_Resume_Northwind_Logistics_Backend_Engineer_Intern-2026-01-15.pdf`)
+   and say so in the report.
 3. **Rebuild and verify**, as in step 6. If it overflows, stop and follow `overflow.md`: new
    content never pushes other content off the page without the user's pick.
 4. **Re-save** with `--save`, to the path step 2 picked. Update the row in `notes/variants.md`
    (set `Sent` back to "not sent" if the corrected copy has not gone out yet) and commit if the
    workspace is a git repository.
-5. **Report** what changed, whether a PDF was replaced, and anything you held back as pending and
-   why.
+5. **Report** what changed, whether a PDF was replaced (and where the sent one was archived), and
+   anything you held back as pending and why.

@@ -127,7 +127,8 @@ the work in the user's own words.
    to fill it (another project, a bullet with a number), never padding. If they have nothing to
    add, the base is done with the free lines: note the slack in `notes/variants.md`, say so once,
    and move on.
-5. Record the page-1 line count from `measure.py` in `notes/variants.md`.
+5. Record the page-1 line count from `measure.py` in `notes/variants.md`, and as `Full at` too
+   if the page is full.
 6. If the workspace is a git repository, commit. If the user created the private backup in
    step 2, push this first commit: `git push -u origin HEAD`.
 
