@@ -26,8 +26,9 @@ the user. Never quietly bend one base into another family.
     cp bases/<base picked in step 2> tailored/Resume-<Company>.tex
 
 If that file exists, ask whether to overwrite it or add the role (`Resume-<Company>-<Role>.tex`).
-A copy that was already sent is a record of what went out; do not reuse it for a new
-application.
+A copy that was already sent (the `Sent` column in `notes/variants.md`) is a record of what went
+out; do not reuse it for a new application. Company and role names follow rule 11 in
+`rules.md`: words joined with underscores, punctuation dropped (`Northwind_Logistics`).
 
 ## 4. Map requirements to facts
 
@@ -56,7 +57,10 @@ Test every changed bullet: could the user defend this sentence, word for word, i
 
     python3 <skill>/scripts/verify.py tailored/Resume-<Company>.tex --png preview.png
 
-Fix every failure, then read `preview.png`. If it overflows, stop and follow `overflow.md`. If
+Fix every failure, then read `preview.png`. A FAIL on "no template placeholders" means template
+text (`Avery Sample`, `example.com`, `TODO`) is still on the page; replace it, and do not reach
+for `--allow-placeholders`, which is only for the shipped template or a deliberately fictional
+page. If it overflows, stop and follow `overflow.md`. If
 more than about 3 lines are free (`measure.py` reports the slack), tell the user how many and
 offer real content to fill them: another project or a bullet from `notes/facts.md`. If they have
 nothing to add, the page is done with the free lines: say so once in the report, do not pad,
@@ -68,8 +72,9 @@ When `verify.py` passes and you have read the page:
 
     python3 <skill>/scripts/verify.py tailored/Resume-<Company>.tex --png preview.png --save pdfs/<First>_<Last>_Resume_<Company>_<Role>.pdf
 
-Then add a row to the tailored copies table in `notes/variants.md`, update `notes/roles.md` if
-you researched, and commit if the workspace is a git repository.
+Then add a row to the tailored copies table in `notes/variants.md` with `Sent` set to "not
+sent", update `notes/roles.md` if you researched, and commit if the workspace is a git
+repository. When the user says they sent it, record the date in `Sent`.
 
 ## 8. Report
 
@@ -85,14 +90,22 @@ bullet about X to the internship"):
 1. **Back it first.** Every new claim needs a confirmed facts entry (`facts.md`). If the facts
    file does not cover it, ask for what a bullet needs: what they did, when, and any number with
    its source. Record what they said under that entry's **Pending** field, and write nothing on
-   the page until they confirm the updated entry. If the only fact behind the request is already
-   on the page, say so instead of restating it in a second bullet.
-2. **Pick the file.** A change for one application goes in that company's tailored copy. If that
-   copy was already sent, ask whether this is for a new application; if it is, make a new copy
-   (step 3) and leave the sent one as the record. Edit a base only when the user asks for the
-   base itself.
+   the page until they confirm the updated entry. For a new project, follow "When the user
+   builds something new" in `facts.md`. If the only fact behind the request is already on the
+   page, say so instead of restating it in a second bullet.
+2. **Pick the file.** Edit a base only when the user asks for the base itself. Otherwise read the
+   copy's `Sent` column in `notes/variants.md`:
+   - **Not sent:** edit the tailored copy in place and re-save over the same PDF.
+   - **Sent, and this is for a new application:** start again from step 1 of this file, with a
+     role suffix on the copy (`Resume-<Company>-<Role>.tex`) and a PDF name that does not
+     overwrite the sent one. The sent copy stays as the record.
+   - **Sent, and the user wants it corrected and resent:** edit it in place and re-save over the
+     same PDF, and say in the report that the old PDF was replaced.
+   If `Sent` is empty or missing, ask the user which case applies.
 3. **Rebuild and verify**, as in step 6. If it overflows, stop and follow `overflow.md`: new
    content never pushes other content off the page without the user's pick.
-4. **Re-save** with `--save` to the same PDF path as in step 7; it overwrites the old PDF. Update
-   the row in `notes/variants.md` and commit if the workspace is a git repository.
-5. **Report** what changed, and anything you held back as pending and why.
+4. **Re-save** with `--save`, to the path step 2 picked. Update the row in `notes/variants.md`
+   (set `Sent` back to "not sent" if the corrected copy has not gone out yet) and commit if the
+   workspace is a git repository.
+5. **Report** what changed, whether a PDF was replaced, and anything you held back as pending and
+   why.

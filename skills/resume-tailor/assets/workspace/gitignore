@@ -5,6 +5,5 @@
 *.fls
 *.fdb_latexmk
 *.synctex.gz
-*-page1.png
 preview.png
 .DS_Store

@@ -97,10 +97,11 @@ This step is what keeps every later tailoring honest. Take the time.
    public URL of each repository and of any deployment; if none is confirmed, the entry's Source
    says so and the project goes on the page with no link.
 5. Show each entry to the user, ask them to correct it, and record the date they confirmed it.
-   Confirmed means the user said yes to the entry as shown, including every detail you read from
-   the code. Silence, or "they did not correct it", is not confirmation: an entry with no date
-   is a draft, and nothing from a draft goes on a page. See "What counts as confirmed" in
-   `facts.md`.
+   An entry that only restates what the user told you in this session is confirmed by their
+   own words; record the date. An entry with anything drafted from code or from an old PDF
+   needs an explicit yes to the entry as shown. Silence, or "they did not correct it", is not
+   confirmation: an entry with no date is a draft, and nothing from a draft goes on a page. See
+   "What counts as confirmed" in `facts.md`.
 
 Do the same for experience: draft one entry per role under `## Experience` in `notes/facts.md`,
 in the same format plus a **Work** field for what they did in their own words (the example is in
@@ -113,11 +114,15 @@ the work in the user's own words.
 
 1. Ask which role family this base is for (for example "backend engineering") and record it in
    `notes/variants.md`. If the user has no preference, propose the family their confirmed facts
-   point to and ask them to confirm it.
+   point to and ask them to confirm it. If they do not answer, use one base named
+   `bases/Resume.tex`, tell them so, and record the proposed family in `notes/variants.md`. Add
+   a second base only when they later name a second family.
 2. Pick the projects from `notes/facts.md` that best fit that family, and write the bullets from
    the facts. Follow `template.md` for structure.
 3. Run `verify.py bases/Resume.tex --png preview.png`. Fix every failure, then read
-   `preview.png`.
+   `preview.png`. A FAIL on "no template placeholders" means template text (`Avery Sample`,
+   `example.com`, `TODO`) is still on the page; replace it. `--allow-placeholders` is only for
+   the shipped template or a deliberately fictional page.
 4. On overflow, follow `overflow.md`. With slack, tell the user how much and offer real content
    to fill it (another project, a bullet with a number), never padding. If they have nothing to
    add, the base is done with the free lines: note the slack in `notes/variants.md`, say so once,

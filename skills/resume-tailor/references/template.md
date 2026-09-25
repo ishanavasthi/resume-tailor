@@ -49,4 +49,7 @@ and paths, `$|$` as the separator, and `--` for date ranges. Never `---`.
 - A long unbreakable token (a URL, a file path) runs into the margin. `verify.py` catches it as
   an overfull box. Shorten it, or put it behind a link with a short label.
 - A section title stranded alone at the bottom of the page. Only the PNG shows this.
+- An empty line's worth of space after a bullet. The bullet's last word wrapped onto a line the
+  text extraction does not see, so `measure.py` does not count it. Shorten the bullet by a word
+  or two and rebuild.
 - Bold on every other word. Bold the one or two terms a reader should see first, no more.

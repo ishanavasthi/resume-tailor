@@ -38,7 +38,7 @@ own words:
     - **Numbers:** report runtime from 40 to 6 minutes (the team's job dashboard).
     - **Honest ceiling:** an intern who rebuilt one report pipeline. Never "led the data
       platform" or "owned the warehouse".
-    - **Not yet true:** nothing else about this role is on record.
+    - **Not yet true:** none.
     - **Pending:** 2026-01-12, the user mentioned joining the on-call rotation; asked for dates
       and what they handled, no answer yet.
     - **Confirmed by user:** 2026-01-10.
@@ -61,12 +61,14 @@ The fields that do the most work:
 
 ## What counts as confirmed
 
-An entry is confirmed when the user has read it and said yes, after any corrections. Record that
-date in **Confirmed by user**. Silence is not confirmation, and neither is "they did not correct
-it". When most of an entry comes from reading the code rather than from the user, show it in
-full and ask plainly: "Is every line of this right?" If they confirm only part, keep the rest
-under **Pending**. An entry with no confirmation date is a draft: nothing from it goes on a
-page. A later change to an entry needs its own yes and a new date.
+An entry that only restates what the user told you in this session, in their own words, is
+confirmed by those words: record the date in **Confirmed by user**. An entry with anything
+drafted from code, from an old PDF, or from your own reading is confirmed only when the user has
+read it and said yes, after any corrections. Silence is not confirmation, and neither is "they
+did not correct it". Show such an entry in full and ask plainly: "Is every line of this
+right?" If they confirm only part, keep the rest under **Pending**. An entry with no
+confirmation date is a draft: nothing from it goes on a page. A later change to an entry is
+confirmed the same way, with a new date.
 
 ## Reading a repository honestly
 

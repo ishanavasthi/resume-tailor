@@ -55,7 +55,7 @@ Read `references/template.md` before the first `.tex` edit in a session.
 |---|---|
 | `init_workspace.py DIR --name "First Last" [--from-template]` | Creates the workspace. Never overwrites. |
 | `build.py FILE.tex` | Compiles a temporary copy. Never touches the source. |
-| `verify.py FILE.tex --png preview.png [--save PDF]` | Every mechanical rule check, plus a PNG of page 1. `--save` copies the PDF only if all checks pass. |
+| `verify.py FILE.tex --png preview.png [--save PDF]` | Every mechanical rule check (one page, no em-dash, no overfull or underfull boxes, no template placeholders), plus a PNG of page 1. `--save` copies the PDF only if all checks pass. |
 | `measure.py FILE.tex` | Lines per page, the text that spilled, slack, and short tails, for sizing trims. |
 | `extract_pdf.py FILE.pdf` | Text from an old resume PDF, for setup. |
 
@@ -64,9 +64,15 @@ workspace clash); `2` a missing tool, bad input, or a LaTeX error. Add `--json` 
 machine-readable output.
 
 Always pass `--png preview.png` to `verify.py`, so the preview lands in the workspace root, where
-the workspace `.gitignore` ignores it. Without `--png` the image goes to a temporary directory
-outside the workspace. `verify.py` always compiles in a temporary directory; only `--save` puts
-a PDF in the workspace.
+the workspace `.gitignore` ignores it. Without `--png` the image stays in a temporary directory
+outside the workspace. `build.py`, `verify.py`, and `measure.py` all compile into a temporary
+directory, by design; only `--save` and `--png` write into the workspace.
+
+`verify.py`'s "no template placeholders" check fails on any non-comment line containing
+`Avery Sample` (the template's fictional name), `example.com`, or `TODO`. A FAIL there means
+template text is still on the page: replace it with the user's real details.
+`--allow-placeholders` skips the check; use it only to verify the shipped template or a
+deliberately fictional page, never a real resume.
 
 ## Done means
 

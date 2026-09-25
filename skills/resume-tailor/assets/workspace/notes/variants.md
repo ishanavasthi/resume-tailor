@@ -15,5 +15,8 @@ these unless the user does. Load-bearing content (never cut first) goes here too
 
 ## Tailored copies
 
-| File | Company | Role | Base | Date | PDF |
-|---|---|---|---|---|---|
+`Sent` is the date the user sent that PDF, or "not sent". A sent copy is a record of what went
+out: edit it only to correct and resend it.
+
+| File | Company | Role | Base | Date | PDF | Sent |
+|---|---|---|---|---|---|---|

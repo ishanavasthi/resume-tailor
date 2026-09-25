@@ -75,5 +75,9 @@ publication), offer to fold it into a project title instead, for example
 
 - Base: `bases/Resume.tex`, then `bases/Resume-<Family>.tex` for each added role family.
 - Tailored copy: `tailored/Resume-<Company>.tex`; add `-<Role>` when one company has two roles.
-- PDF: `pdfs/<First>_<Last>_Resume_<Company>_<Role>.pdf`, underscores for spaces. The name
-  prefix is recorded in the workspace `AGENTS.md`.
+- PDF: `pdfs/<First>_<Last>_Resume_<Company>_<Role>.pdf`. The name prefix is recorded in the
+  workspace `AGENTS.md`.
+- Multi-word company and role names: join the words with underscores and drop punctuation, in
+  both the `.tex` and the PDF name. "Northwind Logistics", "Backend Engineer, Intern" become
+  `tailored/Resume-Northwind_Logistics.tex` and
+  `pdfs/Avery_Sample_Resume_Northwind_Logistics_Backend_Engineer_Intern.pdf`.
