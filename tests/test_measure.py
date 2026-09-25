@@ -1,3 +1,5 @@
+import json
+
 from helpers import ENGINE, SENTINEL, make_tex, needs_engine, overflow_tex, run_script
 import build as builder
 import measure
@@ -46,3 +48,39 @@ def test_one_page_exits_0_and_reports_slack(tmp_path):
     proc = run_script("measure.py", make_tex(tmp_path, "resume.tex"), "--engine", ENGINE)
     assert proc.returncode == 0
     assert "slack" in proc.stdout
+
+
+def test_missing_file_with_json_prints_a_json_error(tmp_path):
+    proc = run_script("measure.py", tmp_path / "missing.pdf", "--json")
+    assert proc.returncode == 2
+    payload = json.loads(proc.stdout)
+    assert payload["ok"] is False and "missing.pdf" in payload["error"]
+
+
+def test_pdf_with_no_text_is_an_error_not_a_fit(tmp_path):
+    from pypdf import PdfWriter
+    blank = tmp_path / "blank.pdf"
+    writer = PdfWriter()
+    writer.add_blank_page(612, 792)
+    with open(blank, "wb") as handle:
+        writer.write(handle)
+    text = run_script("measure.py", blank)
+    assert text.returncode == 2 and "no text could be extracted" in text.stdout
+    proc = run_script("measure.py", blank, "--json")
+    assert proc.returncode == 2
+    assert json.loads(proc.stdout)["ok"] is False
+
+
+@needs_engine
+def test_json_success_is_ok_and_uppercase_tex_is_built(tmp_path):
+    proc = run_script("measure.py", make_tex(tmp_path, "resume.TEX"), "--engine", ENGINE, "--json")
+    assert proc.returncode == 0
+    payload = json.loads(proc.stdout)
+    assert payload["ok"] is True and payload["pages"] == 1
+
+
+@needs_engine
+def test_text_report_names_the_pdf(tmp_path):
+    proc = run_script("measure.py", make_tex(tmp_path, "resume.tex"), "--engine", ENGINE)
+    first = proc.stdout.splitlines()[0]
+    assert first.startswith("pdf: ") and first.endswith("resume.pdf")

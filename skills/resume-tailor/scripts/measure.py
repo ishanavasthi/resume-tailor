@@ -10,7 +10,8 @@ Usage: measure.py FILE.tex|FILE.pdf [--engine ...] [--capacity-lines 46-48] [--c
 Reports lines per page, the text that spilled past page 1, slack on a one-page result, and
 short tails: a bullet whose last line holds only a few words, the cheapest line to win back.
 Line counts come from extracted text, a close proxy but not exact. Confirm trims by rebuilding.
-Exit codes: 0 fits on one page, 1 overflows, 2 build or read error.
+Exit codes: 0 fits on one page, 1 overflows, 2 build or read error, or no extractable text.
+With --json, every exit prints JSON: {"ok": true, ...} or {"ok": false, "error": ...}.
 """
 from __future__ import annotations
 
@@ -93,7 +94,7 @@ def measure(pdf, tex_text: str = "", capacity_lines=(46, 48), capacity_chars=110
 
 
 def format_report(m: Measurement, capacity_lines, capacity_chars) -> str:
-    out = [f"pages: {m.pages}"]
+    out = [f"pdf: {m.pdf}", f"pages: {m.pages}"]
     for n, (lines, words) in enumerate(zip(m.lines_per_page, m.words_per_page), 1):
         out.append(f"page {n}: {lines} lines, {words} words")
     out.append(f"widest line: {m.widest_line} chars (a full line is about {capacity_chars})")
@@ -126,23 +127,27 @@ def main(argv=None) -> int:
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
     tex_text = ""
+
+    def fail(message: str) -> int:
+        print(json.dumps({"ok": False, "error": message}) if args.json else message)
+        return 2
+
     try:
-        if args.file.suffix == ".tex":
+        if args.file.suffix.lower() == ".tex":
             tex_text = args.file.read_text(encoding="utf-8")
             pdf = builder.build(args.file, args.engine).pdf
         else:
             pdf = args.file
         m = measure(pdf, tex_text, args.capacity_lines, args.capacity_chars)
     except ImportError as err:
-        print(f"missing dependency {err.name}: pip install {err.name}, or run this script with uv run")
-        return 2
+        return fail(f"missing dependency {err.name}: pip install {err.name}, or run this script with uv run")
     except builder.BuildError as err:
-        print(f"BUILD FAILED: {err}")
-        return 2
+        return fail(f"BUILD FAILED: {err}")
     except Exception as err:  # unreadable or missing PDF
-        print(f"cannot read {args.file}: {err}")
-        return 2
-    print(json.dumps(asdict(m), indent=2) if args.json
+        return fail(f"cannot read {args.file}: {err}")
+    if not any(m.lines_per_page):  # no pages, or pages with no text layer: nothing was measured
+        return fail(f"no text could be extracted from {m.pdf}; it cannot be measured")
+    print(json.dumps({"ok": True, **asdict(m)}, indent=2) if args.json
           else format_report(m, args.capacity_lines, args.capacity_chars))
     return 0 if m.pages <= 1 else 1
 
