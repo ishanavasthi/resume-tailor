@@ -13,7 +13,8 @@ Line counts come from extracted text, a close proxy but not exact. Confirm trims
 The 46-54 line capacity is an estimate that shifts with the number of headings on the page; pass
 --capacity-lines with the count at which this base last filled its page when you know it.
 Exit codes: 0 fits on one page, 1 overflows, 2 build or read error, or no extractable text.
-With --json, every exit prints JSON: {"ok": true, ...} or {"ok": false, "error": ...}.
+With --json, every exit after argument parsing prints JSON: {"ok": true, ...} or
+{"ok": false, "error": ...}. An argparse usage error prints plain usage text to stderr and exits 2.
 """
 from __future__ import annotations
 

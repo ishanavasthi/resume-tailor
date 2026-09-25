@@ -54,10 +54,11 @@ Read `references/template.md` before the first `.tex` edit in a session.
 | Command | What it does |
 |---|---|
 | `init_workspace.py DIR --name "First Last" [--from-template]` | Creates the workspace. Never overwrites. |
-| `build.py FILE.tex` | Compiles a temporary copy. Never touches the source. |
+| `build.py FILE.tex [--out DIR]` | Compiles a copy in a fresh temporary directory. Never touches the source. `--out DIR` copies only the PDF into DIR. |
 | `verify.py FILE.tex --png preview.png [--save PDF]` | Every mechanical rule check (one page, no em-dash, no overfull or underfull boxes, no template placeholders), plus a PNG of page 1. `--save` copies the PDF only if all checks pass. |
 | `measure.py FILE.tex [--capacity-lines LO-HI]` | Lines per page, the text that spilled, slack, and short tails, for sizing trims. |
 | `extract_pdf.py FILE.pdf` | Text from an old resume PDF, for setup. |
+| `--engine auto\|pdflatex\|tectonic\|xelatex` | Accepted by `build.py`, `verify.py`, and `measure.py`. `auto` (the default) tries pdflatex, then tectonic, then xelatex. If builds fail on a missing `.sty`, see `references/setup.md` step 1. |
 
 Exit codes: `0` pass; `1` a check failed or the script refused (overflow, no text in the PDF,
 workspace clash); `2` a missing tool, bad input, or a LaTeX error. Add `--json` for
@@ -65,13 +66,17 @@ machine-readable output.
 
 Always pass `--png preview.png` to `verify.py`, so the preview lands in the workspace root, where
 the workspace `.gitignore` ignores it. Without `--png` the image stays in a temporary directory
-outside the workspace. `build.py`, `verify.py`, and `measure.py` all compile into a temporary
-directory, by design; only `verify.py --save`, `verify.py --png`, and `build.py --out DIR` write
-into the workspace.
+outside the workspace. `build.py`, `verify.py`, and `measure.py` all compile in a fresh temporary
+directory, by design, so the build copy, `.log`, and `.aux` never land in the workspace. Only
+`verify.py --save` (the PDF), `verify.py --png` (the preview), and `build.py --out DIR` (the PDF
+alone) write into the workspace.
 
-`verify.py`'s "no template placeholders" check fails on any non-comment line containing
-`Avery Sample` (the template's fictional name), `example.com`, or `TODO`. A FAIL there means
-template text is still on the page: replace it with the user's real details.
+`verify.py`'s "no template placeholders" check fails on any non-comment line containing the
+template's fictional name, contact details, school, employer and project names, plus TODO
+(`Avery Sample`, `example.com`, `555-010-0199`, `github.com/example`, `linkedin.com/in/example`,
+`Example State University`, `Example Logistics Co.`, `ShelfScan`, `ForecastCheck`, `StudyBuddy`,
+`TODO`). A FAIL there means template text is still on the page: replace it with the user's real
+details.
 `--allow-placeholders` skips the check; use it only to verify the shipped template or a
 deliberately fictional page, never a real resume.
 

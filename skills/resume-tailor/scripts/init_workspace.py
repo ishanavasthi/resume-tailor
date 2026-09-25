@@ -10,8 +10,9 @@ Usage: init_workspace.py DIR --name "First Last" [--from-template] [--json]
 Never overwrites: if any file it would write already exists (or a file sits where one of its
 folders goes), it writes nothing.
 Exit codes: 0 created, 1 a file already exists, 2 bad input or a filesystem error.
-With --json, every exit prints JSON: {"ok": true, "dir": ..., "files": [...]} or
-{"ok": false, "error": ...}.
+With --json, every exit after argument parsing prints JSON: {"ok": true, "dir": ...,
+"files": [...]} or {"ok": false, "error": ...}. An argparse usage error prints plain usage text
+to stderr and exits 2.
 """
 from __future__ import annotations
 

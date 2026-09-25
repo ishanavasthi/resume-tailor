@@ -8,11 +8,13 @@
 Usage: verify.py FILE.tex [--engine ...] [--save PDF] [--png PNG] [--allow-placeholders] [--json]
 
 Checks: exactly one page; no em-dash in the source (U+2014, ---, \\textemdash) or in the PDF
-text; no overfull or underfull boxes; no leftover template placeholders. A link label in the
+text; no overfull or underfull boxes; no leftover template placeholders (the template's fictional
+name, contact details, school, employer and project names, plus TODO). A link label in the
 Projects section other than View Project, Live Demo, or Demo Video is a warning.
 --save copies the built PDF to the given path, and only when every check passes.
 Exit codes: 0 all checks pass, 1 a check failed, 2 build or render error.
-With --json, every exit prints JSON: {"ok": true|false, ...checks} or {"ok": false, "error": ...}.
+With --json, every exit after argument parsing prints JSON: {"ok": true|false, ...checks} or
+{"ok": false, "error": ...}. An argparse usage error prints plain usage text to stderr and exits 2.
 """
 from __future__ import annotations
 
@@ -33,7 +35,13 @@ EMDASH = "\u2014"
 LIGATURE_RE = re.compile(r"(?<!-)---(?!-)")
 MACRO_RE = re.compile(r"\\textemdash(?![A-Za-z])")
 COMMENT_RE = re.compile(r"(?<!\\)%.*")
-PLACEHOLDERS = ("Avery Sample", "example.com", "TODO")
+# The shipped template's fictional name, contact details, school, employer and project names, plus
+# TODO. Any of them on a code line means template text is still on the page. Case-sensitive.
+PLACEHOLDERS = (
+    "Avery Sample", "example.com", "555-010-0199", "github.com/example", "linkedin.com/in/example",
+    "Example State University", "Example Logistics Co.", "ShelfScan", "ForecastCheck", "StudyBuddy",
+    "TODO",
+)
 ALLOWED_LABELS = ("View Project", "Live Demo", "Demo Video")
 LABEL_RE = re.compile(r"\\href\{[^}]*\}\{\\underline\{([^}]*)\}\}")
 SECTION_SPLIT_RE = re.compile(r"\\section\*?\{([^}]*)\}")

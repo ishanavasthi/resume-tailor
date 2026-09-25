@@ -51,12 +51,6 @@ def test_cli_without_engine_exits_2(tmp_path):
     assert "No TeX engine found" in proc.stdout
 
 
-def test_refuses_to_build_into_the_source_directory(tmp_path):
-    src = make_tex(tmp_path, "r.tex")
-    with pytest.raises(builder.BuildError, match="must not be the source"):
-        builder.build(src, ENGINE, out_dir=tmp_path)
-
-
 @needs_engine
 def test_build_template_and_leave_source_untouched(tmp_path):
     src = make_tex(tmp_path, "resume.tex")
@@ -74,14 +68,24 @@ def test_build_reports_overfull_with_source_line(tmp_path):
     assert any(w.kind == "Overfull" and w.line == line for w in result.warnings)
 
 
-def test_refuses_a_case_flipped_source_directory(tmp_path):
-    (tmp_path / "Aa").mkdir()
-    if not (tmp_path / "aa").exists():
-        pytest.skip("filesystem is case-sensitive")
-    src_dir = tmp_path / "Src"
+@needs_engine
+@pytest.mark.parametrize("where", ["another folder", "the source's folder"])
+def test_out_dir_receives_only_the_pdf_and_keeps_a_same_named_tex(tmp_path, monkeypatch, where):
+    src_dir = tmp_path / "tailored"
     src_dir.mkdir()
-    src = make_tex(src_dir, "r.tex")
-    before = hashlib.sha256(src.read_bytes()).hexdigest()
-    with pytest.raises(builder.BuildError, match="must not be the source"):
-        builder.build(src, ENGINE, out_dir=tmp_path / "sRC")
-    assert hashlib.sha256(src.read_bytes()).hexdigest() == before
+    src = make_tex(src_dir, "Resume-Acme.tex")
+    out = src_dir if where == "the source's folder" else tmp_path / "scratch"
+    if out != src_dir:
+        out.mkdir()
+        make_tex(out, "Resume-Acme.tex", ("Ran weekly lab sessions", "Ran lab sessions"))  # a sized package
+    kept = out / "Resume-Acme.tex"
+    before = {p.name: p.read_bytes() for p in out.iterdir()}
+    made = []
+    real_mkdtemp = builder.tempfile.mkdtemp
+    monkeypatch.setattr(builder.tempfile, "mkdtemp",
+                        lambda **kw: made.append(real_mkdtemp(**kw)) or made[-1])
+    result = builder.build(src, ENGINE, out_dir=out)
+    assert result.pdf == str(out.resolve() / "Resume-Acme.pdf")
+    assert kept.read_bytes() == before["Resume-Acme.tex"]
+    assert sorted(p.name for p in out.iterdir()) == sorted(set(before) | {"Resume-Acme.pdf"})
+    assert len(made) == 1 and not os.path.exists(made[0])  # the temp build dir is gone

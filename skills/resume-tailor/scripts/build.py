@@ -7,10 +7,15 @@
 
 Usage: build.py FILE.tex [--engine auto|pdflatex|tectonic|xelatex] [--out DIR] [--json]
 
-The source is copied into a build directory and compiled there. For engines other than
-pdflatex, the two pdfTeX-only preamble lines are commented out in that copy only; they map
-glyphs for text extraction and do not affect layout.
+The source is copied into a fresh temporary directory and compiled there. For engines other
+than pdflatex, the two pdfTeX-only preamble lines are commented out in that copy only; they map
+glyphs for text extraction and do not affect layout. Without --out, the PDF stays in that
+temporary directory. With --out DIR, only the PDF is copied into DIR (created if needed) as
+<stem>.pdf and the temporary directory is removed; the prepared .tex copy, the .log and the .aux
+never land in DIR.
 Exit codes: 0 built, 2 missing engine or LaTeX error.
+With --json, every exit after argument parsing prints JSON. An argparse usage error prints plain
+usage text to stderr and exits 2.
 """
 from __future__ import annotations
 
@@ -38,7 +43,6 @@ BOX_RE = re.compile(
 ERROR_RE = re.compile(r"^! (.+)$", re.M)
 ERROR_LINE_RE = re.compile(r"^l\.(\d+)", re.M)
 TIMEOUT_SECONDS = 300
-SAME_DIR_MESSAGE = "the build directory must not be the source's directory; the source would be overwritten"
 INSTALL_HINTS = """No TeX engine found. Install one:
   macOS:   brew install tectonic   (or MacTeX for pdflatex)
   Linux:   sudo apt-get install texlive-latex-extra texlive-fonts-recommended
@@ -114,50 +118,53 @@ def _command(engine: str, out_dir: Path, name: str) -> List[str]:
 
 
 def build(source, engine: str = "auto", out_dir=None) -> BuildResult:
+    """Compile source in a fresh temp directory. With out_dir, copy only the PDF there."""
     source = Path(source).resolve()
     if not source.is_file():
         raise BuildError(f"no such file: {source}")
-    out_dir = Path(out_dir).resolve() if out_dir else Path(tempfile.mkdtemp(prefix="resume-build-"))
-    # samefile catches a case-flipped or hard-linked path that the string compare misses
-    # on case-insensitive filesystems; the string compare covers an out dir not yet created.
-    if out_dir == source.parent or (out_dir.exists() and out_dir.samefile(source.parent)):
-        raise BuildError(SAME_DIR_MESSAGE)
     engine = find_engine(engine)
-    work = out_dir / source.name
     try:
         text = source.read_text(encoding="utf-8")
-        out_dir.mkdir(parents=True, exist_ok=True)
-        if work.exists() and work.samefile(source):
-            raise BuildError(SAME_DIR_MESSAGE)
+        work_dir = Path(tempfile.mkdtemp(prefix="resume-build-"))
+        work = work_dir / source.name
         work.write_text(prepare_source(text, engine), encoding="utf-8")
-        stale_log = out_dir / f"{source.stem}.log"
-        if stale_log.exists():
-            stale_log.unlink()  # a log left by an earlier build would give a stale first_error
     except (OSError, UnicodeDecodeError) as err:
         raise BuildError(f"cannot prepare the build copy of {source.name}: {err}")
     passes = 1 if engine == "tectonic" else 2  # tectonic reruns by itself; pdflatex needs a second pass for hyperref
     proc = None
     for _ in range(passes):
         try:
-            proc = subprocess.run(_command(engine, out_dir, work.name), cwd=out_dir,
+            proc = subprocess.run(_command(engine, work_dir, work.name), cwd=work_dir,
                                   capture_output=True, text=True, timeout=TIMEOUT_SECONDS)
         except subprocess.TimeoutExpired:
             raise BuildError(f"{engine} timed out after {TIMEOUT_SECONDS}s")
         if proc.returncode != 0:
             break
-    pdf, log = out_dir / f"{source.stem}.pdf", out_dir / f"{source.stem}.log"
+    pdf, log = work_dir / f"{source.stem}.pdf", work_dir / f"{source.stem}.log"
     log_text = log.read_text(encoding="utf-8", errors="replace") if log.exists() else ""
     if proc.returncode != 0 or not pdf.exists():
         detail = first_error(log_text) or (proc.stderr or proc.stdout).strip()[-1500:]
         raise BuildError(f"{engine} failed on {source.name}: {detail}")
+    if out_dir:
+        target = Path(out_dir).resolve() / pdf.name
+        try:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(pdf, target)
+        except OSError as err:
+            raise BuildError(f"built {source.name} but could not copy the PDF to {target}: {err}")
+        shutil.rmtree(work_dir, ignore_errors=True)
+        pdf = target
     return BuildResult(str(source), str(pdf), engine, parse_log(log_text))
 
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Compile a resume .tex file to PDF without touching the source.")
     parser.add_argument("tex", type=Path)
-    parser.add_argument("--engine", default="auto", choices=("auto",) + ENGINES)
-    parser.add_argument("--out", type=Path, help="build directory (default: a new temp directory)")
+    parser.add_argument("--engine", default="auto", choices=("auto",) + ENGINES,
+                        help="auto tries pdflatex, then tectonic, then xelatex")
+    parser.add_argument("--out", type=Path,
+                        help="copy only the built PDF into this directory, created if needed "
+                             "(default: leave it in the temporary build directory)")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
     try:

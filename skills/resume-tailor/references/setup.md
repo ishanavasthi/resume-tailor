@@ -18,6 +18,11 @@ Run the checks and report anything missing with the install line for the user's 
 Tectonic downloads LaTeX packages on first use, so the first build needs a network connection
 and can take a minute.
 
+The scripts pick an engine with `--engine auto` (the default): pdflatex, then tectonic, then
+xelatex. If a build fails on a missing `.sty` because the TeX install is partial (pdflatex is
+there but lacks packages), pass `--engine tectonic` to every script; it fetches packages on first
+run. A resume that uses `fontspec` needs `--engine xelatex`.
+
 Then run `gh auth status`. If the user is not logged in, ask them to run `gh auth login`
 themselves. Never ask for, type, or handle a token or password. Ask which GitHub account, and
 which organisations, hold the work they want on the resume. If `gh` is logged in as a different
@@ -49,10 +54,10 @@ template:
 Then `cd` into the workspace and work from there from here on. Offer, as two separate questions:
 
 1. `git init`, so every change is recorded.
-2. Only if they said yes to git: a private GitHub backup,
-   `gh repo create <name> --private --source .`. It adds the remote without pushing; the first
-   push happens after the base is committed in step 5. The resume holds a phone number and an
-   email address. Never create a public repository for it.
+2. Only if they said yes to git: a private GitHub backup. Ask what to name the repository
+   (suggest `resume`), then run `gh repo create <name> --private --source .`. It adds the remote
+   without pushing; the first push happens after the base is committed in step 5. The resume
+   holds a phone number and an email address. Never create a public repository for it.
 
 ## 3. Bring in the starting point
 
@@ -120,9 +125,10 @@ the work in the user's own words.
 2. Pick the projects from `notes/facts.md` that best fit that family, and write the bullets from
    the facts. Follow `template.md` for structure.
 3. Run `verify.py bases/Resume.tex --png preview.png`. Fix every failure, then read
-   `preview.png`. A FAIL on "no template placeholders" means template text (`Avery Sample`,
-   `example.com`, `TODO`) is still on the page; replace it. `--allow-placeholders` is only for
-   the shipped template or a deliberately fictional page.
+   `preview.png`. A FAIL on "no template placeholders" means template text (the template's
+   fictional name, contact details, school, employer and project names, plus TODO) is still on
+   the page; replace it. `--allow-placeholders` is only for the shipped template or a
+   deliberately fictional page.
 4. On overflow, follow `overflow.md`. With slack, tell the user how much and offer real content
    to fill it (another project, a bullet with a number), never padding. If they have nothing to
    add, the base is done with the free lines: note the slack in `notes/variants.md`, say so once,

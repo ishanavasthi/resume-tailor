@@ -7,7 +7,8 @@
 
 Usage: extract_pdf.py FILE.pdf [--json]
 Exit codes: 0 text found, 1 no extractable text (a scanned image), 2 unreadable file.
-With --json, every exit prints JSON: {"ok": true, "pages": [...]} or {"ok": false, "error": ...}.
+With --json, every exit after argument parsing prints JSON: {"ok": true, "pages": [...]} or
+{"ok": false, "error": ...}. An argparse usage error prints plain usage text to stderr and exits 2.
 """
 from __future__ import annotations
 

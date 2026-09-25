@@ -60,13 +60,13 @@ Test every changed bullet: could the user defend this sentence, word for word, i
     python3 <skill>/scripts/verify.py tailored/Resume-<Company>.tex --png preview.png
 
 Fix every failure, then read `preview.png`. A FAIL on "no template placeholders" means template
-text (`Avery Sample`, `example.com`, `TODO`) is still on the page; replace it, and do not reach
-for `--allow-placeholders`, which is only for the shipped template or a deliberately fictional
-page. If it overflows, stop and follow `overflow.md`. If
-more than about 3 lines are free (`measure.py` reports the slack), tell the user how many and
-offer real content to fill them: another project or a bullet from `notes/facts.md`. If they have
-nothing to add, the page is done with the free lines: say so once in the report, do not pad,
-and do not keep asking.
+text (the template's fictional name, contact details, school, employer and project names, plus
+TODO) is still on the page; replace it, and do not reach for `--allow-placeholders`, which is
+only for the shipped template or a deliberately fictional page. If it overflows, stop and follow
+`overflow.md`. If more than about 3 lines are free (`measure.py` reports the slack), tell the
+user how many and offer real content to fill them: another project or a bullet from
+`notes/facts.md`. If they have nothing to add, the page is done with the free lines: say so once
+in the report, do not pad, and do not keep asking.
 
 ## 7. Save and record
 
@@ -75,9 +75,10 @@ When `verify.py` passes and you have read the page:
     python3 <skill>/scripts/verify.py tailored/Resume-<Company>.tex --png preview.png --save pdfs/<First>_<Last>_Resume_<Company>_<Role>.pdf
 
 Then add a row to the tailored copies table in `notes/variants.md` with `Sent` set to "not
-sent", update `notes/roles.md` if you researched, and commit if the workspace is a git
-repository. When the user says they sent it, record the date in `Sent`. If the table has no
-`Sent` column (a workspace made by an older version of this skill), add it.
+sent". If the page is full, record the page's line count as `Full at` in `notes/variants.md`.
+Update `notes/roles.md` if you researched, and commit if the workspace is a git repository.
+When the user says they sent it, record the date in `Sent`. If the table has no `Sent` column
+(a workspace made by an older version of this skill), add it.
 
 ## 8. Report
 

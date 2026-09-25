@@ -44,7 +44,8 @@ one. Protocol: `overflow.md`.
 
 `verify.py` renders page 1 to a PNG. Read the image before saying the resume is done. The page
 count alone misses a heading stranded at the bottom, a link that wrapped, uneven spacing, and
-bullets whose last line is a single word.
+bullets whose last line is a single word. Report a stranded line to the user and suggest a
+shortening; the user decides, as with any trim (rule 6).
 
 ## 8. Link labels say what is behind the link
 

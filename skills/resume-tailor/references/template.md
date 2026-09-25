@@ -56,8 +56,8 @@ and paths, `$|$` as the separator, and `--` for date ranges. Never `---`.
   an overfull box. Shorten it, or put it behind a link with a short label.
 - A section title stranded alone at the bottom of the page. Only the PNG shows this.
 - An empty line's worth of space after a bullet. The bullet's last word wrapped onto a line the
-  text extraction does not see, so `measure.py` does not count it. Shorten the bullet by a word
-  or two and rebuild.
+  text extraction does not see, so `measure.py` does not count it. Report the stranded line to
+  the user and suggest a shortening; the user decides. Never cut words on your own.
 - Bold on every other word. Bold the one or two terms a reader should see first, no more.
 
 Text extraction can split a bold or small-caps word ("F rameworks", "Y AML") in the output of

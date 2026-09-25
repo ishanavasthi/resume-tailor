@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from helpers import ENGINE, LAB_ANCHOR, make_tex, needs_engine, overflow_tex, run_script
+from helpers import ENGINE, LAB_ANCHOR, TEMPLATE, make_tex, needs_engine, overflow_tex, run_script
 import build as builder
 import verify
 
@@ -23,6 +23,19 @@ def test_emdash_forms_are_found_but_ranges_and_comments_are_not():
 def test_placeholders_found_outside_comments():
     tex = "\\textbf{Avery Sample}\n% TODO in a comment\nTODO: add a bullet"
     assert [n for n, _ in verify.find_placeholders(tex)] == [1, 3]
+
+
+TEMPLATE_FICTION = ("555-010-0199", "github.com/example", "linkedin.com/in/example",
+                    "Example State University", "Example Logistics Co.",
+                    "ShelfScan", "ForecastCheck", "StudyBuddy")
+
+
+def test_every_fictional_detail_in_the_template_is_a_placeholder():
+    tex = TEMPLATE.read_text(encoding="utf-8")
+    flagged = {n for n, _ in verify.find_placeholders(tex)}
+    for detail in TEMPLATE_FICTION:
+        lines = {n for n, line in verify._code_lines(tex) if detail in line}
+        assert lines and lines <= flagged, detail
 
 
 def test_link_labels_checked_only_in_projects():
@@ -60,6 +73,22 @@ def test_template_fails_on_its_own_placeholders(tmp_path):
     proc = run_script("verify.py", make_tex(tmp_path, "resume.tex"), "--engine", ENGINE)
     assert proc.returncode == 1
     assert "FAIL  no template placeholders" in proc.stdout
+
+
+@needs_engine
+def test_template_with_only_the_name_and_contact_links_replaced_still_fails(tmp_path):
+    src = make_tex(tmp_path, "resume.tex",
+                   ("\\scshape Avery Sample", "\\scshape Jordan Lee"),
+                   ("\\href{mailto:avery@example.com}{\\underline{avery@example.com}} $|$\n", ""),
+                   ("\\href{https://example.com}{\\underline{Website}} $|$\n", ""),
+                   (" $|$ \\href{https://example.com/shelfscan}{\\underline{Live Demo}}", ""),
+                   (" $|$ \\href{https://example.com/studybuddy-video}{\\underline{Demo Video}}", ""))
+    code = [line for _, line in verify._code_lines(src.read_text(encoding="utf-8"))]
+    assert not any(p in line for line in code for p in ("Avery Sample", "example.com", "TODO"))
+    proc = run_script("verify.py", src, "--engine", ENGINE)
+    assert proc.returncode == 1, proc.stdout
+    assert "FAIL  no template placeholders" in proc.stdout
+    assert "555-010-0199" in proc.stdout
 
 
 @needs_engine
