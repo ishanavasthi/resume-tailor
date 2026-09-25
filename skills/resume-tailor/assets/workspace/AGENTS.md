@@ -5,7 +5,8 @@ agent needs to tailor a resume for a new job description. It is private. Never p
 push it to a public repository: it contains contact details.
 
 Work here with the `resume-tailor` skill (https://github.com/ishanavasthi/resume-tailor). If the
-skill is not loaded, ask the user to install it before editing anything.
+skill is not loaded, ask the user to install it before editing anything
+(`npx skills add ishanavasthi/resume-tailor` works for most agents).
 
 ## Layout
 

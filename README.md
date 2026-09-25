@@ -23,14 +23,29 @@ company and role, still on one page, with every claim traceable and every gap sa
 
 ## Install
 
-**Claude Code**
+**Any agent, one command** (Claude Code, Codex, Cursor, Gemini CLI, OpenCode, Windsurf, GitHub
+Copilot, Cline, and the rest of the [skills CLI](https://skills.sh) list):
+
+    npx skills add ishanavasthi/resume-tailor
+
+It asks which agents to install to. To skip the prompts, name the agents, or use `*` for all:
+
+    npx skills add ishanavasthi/resume-tailor -a claude-code -a codex -y
+    npx skills add ishanavasthi/resume-tailor -a '*' -y
+
+Add `-g` to install for every project on the machine instead of the current one. The command
+installs the whole `skills/resume-tailor/` folder (instructions, scripts, template), so the
+scripts run from wherever it lands.
+
+**Claude Code, as a plugin** (an alternative to the command above):
 
     /plugin marketplace add ishanavasthi/resume-tailor
     /plugin install resume-tailor@resume-tailor
 
-**Other agents** that support the [Agent Skills](https://agentskills.io) format: copy
-`skills/resume-tailor/` into your agent's skills folder. Your agent's documentation says where
-that is.
+**By hand:** copy `skills/resume-tailor/` into your agent's skills folder. It follows the
+[Agent Skills](https://agentskills.io) format, so any agent that reads `SKILL.md` can use it.
+
+[![skills.sh](https://skills.sh/b/ishanavasthi/resume-tailor)](https://skills.sh/ishanavasthi/resume-tailor)
 
 ## Requirements
 
