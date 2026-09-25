@@ -58,24 +58,18 @@ scripts run from wherever it lands.
 
 ## First prompt
 
-After installing, open your agent in the folder where you want the workspace (or anywhere; it
-will ask) and paste this:
+Open your agent where you want the workspace to live and say:
 
-    Use the resume-tailor skill to set up my resume workspace from the beginning.
-    Check the tools it needs (Python, a TeX engine, pypdf, a page renderer, the GitHub CLI) and
-    give me the install commands for anything missing before going on. Check that gh is logged
-    in; if not, tell me and wait. Then ask me, a few questions at a time, where the workspace
-    should live, my name, and whether I am starting from an existing LaTeX resume, an old PDF,
-    or nothing. Build the facts file from my GitHub repositories and confirm each entry with me
-    before you use it. Finish with a verified one-page base resume and tell me what you built,
-    what is on the page, and what is still missing.
+    Set up my resume workspace.
 
-In Claude Code, `Set up my resume workspace.` is enough on its own: the skill's description
-matches it and the setup steps do the rest. The longer prompt is for agents that pick skills
-less eagerly, and it makes the agent say what it is about to do before it does it.
+The skill takes it from there: it checks the tools and gives you install commands for anything
+missing, confirms `gh` is logged in, asks a few questions at a time (where, your name, what you
+are starting from), drafts a facts entry per repository for you to confirm, and ends with a
+verified one-page base resume. If your agent does not pick the skill up on its own, prefix it:
+`Use the resume-tailor skill: set up my resume workspace.`
 
-If you already have a workspace, open the agent inside that folder; its `AGENTS.md` points the
-agent at the skill and your notes.
+Already have a workspace? Open the agent inside that folder; its `AGENTS.md` points the agent at
+the skill and your notes.
 
 ## Then
 
