@@ -18,6 +18,7 @@ skill is not loaded, ask the user to install it before editing anything.
 | `notes/variants.md` | What each base contains, and the decisions locked in so far. |
 | `notes/roles.md` | Company and role research. |
 | `notes/gaps.md` | Job requirements with nothing behind them, and other open risks. |
+| `preview.png` | The latest page-1 preview from `verify.py --png preview.png`. Git-ignored. |
 
 ## Rules
 

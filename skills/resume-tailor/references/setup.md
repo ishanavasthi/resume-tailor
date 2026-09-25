@@ -20,7 +20,10 @@ and can take a minute.
 
 Then run `gh auth status`. If the user is not logged in, ask them to run `gh auth login`
 themselves. Never ask for, type, or handle a token or password. Ask which GitHub account, and
-which organisations, hold the work they want on the resume.
+which organisations, hold the work they want on the resume. If `gh` is logged in as a different
+account, say so; public repositories can still be listed by name, and for private ones ask the
+user to switch accounts themselves (`gh auth switch`). If a project is only on disk, read it
+there and skip the `gh` commands for it.
 
 ## 2. Create the workspace
 
@@ -53,9 +56,10 @@ Then `cd` into the workspace and work from there from here on. Offer, as two sep
 
 ## 3. Bring in the starting point
 
-**A LaTeX resume.** Copy it to `bases/Resume.tex` and run `verify.py` on it. If it is not on this
-skill's template, offer to move the content onto the template and say why: one column, real text,
-no tables used for layout, no icons, which is the shape applicant tracking systems parse most
+**A LaTeX resume.** Copy it to `bases/Resume.tex` and run
+`verify.py bases/Resume.tex --png preview.png` on it. If it is not on this skill's template,
+offer to move the content onto the template and say why: one column, real text, no tables used
+for layout, no icons, which is the shape applicant tracking systems parse most
 reliably. If the user declines, keep their file and treat `template.md` as a guide only.
 
 **An old PDF, or a Word file.** For Word, ask them to export a PDF first. Then:
@@ -89,11 +93,18 @@ This step is what keeps every later tailoring honest. Take the time.
    (`gh api "repos/<owner>/<repo>/commits?per_page=30"`) for how current it is and, on shared
    repositories, how much of it is the user's.
 4. Draft an entry in `notes/facts.md` in the format from `facts.md`, including the honest
-   ceiling: the strongest true claim, and the grander label it must not be given.
+   ceiling: the strongest true claim, and the grander label it must not be given. Ask for the
+   public URL of each repository and of any deployment; if none is confirmed, the entry's Source
+   says so and the project goes on the page with no link.
 5. Show each entry to the user, ask them to correct it, and record the date they confirmed it.
+   Confirmed means the user said yes to the entry as shown, including every detail you read from
+   the code. Silence, or "they did not correct it", is not confirmation: an entry with no date
+   is a draft, and nothing from a draft goes on a page. See "What counts as confirmed" in
+   `facts.md`.
 
 Do the same for experience: draft one entry per role under `## Experience` in `notes/facts.md`,
-in the same format, from what the user told you in step 3 (or from the old resume's text). Show
+in the same format plus a **Work** field for what they did in their own words (the example is in
+`facts.md`), from what the user told you in step 3 (or from the old resume's text). Show
 each to the user, ask them to correct it, and record the date they confirmed it, exactly as for
 projects. For private or employer-owned repositories, never link them on the page, and describe
 the work in the user's own words.
@@ -101,12 +112,16 @@ the work in the user's own words.
 ## 5. Draft the base
 
 1. Ask which role family this base is for (for example "backend engineering") and record it in
-   `notes/variants.md`.
+   `notes/variants.md`. If the user has no preference, propose the family their confirmed facts
+   point to and ask them to confirm it.
 2. Pick the projects from `notes/facts.md` that best fit that family, and write the bullets from
    the facts. Follow `template.md` for structure.
-3. Run `verify.py bases/Resume.tex`. Fix every failure, then read the PNG.
+3. Run `verify.py bases/Resume.tex --png preview.png`. Fix every failure, then read
+   `preview.png`.
 4. On overflow, follow `overflow.md`. With slack, tell the user how much and offer real content
-   to fill it (another project, a bullet with a number), never padding.
+   to fill it (another project, a bullet with a number), never padding. If they have nothing to
+   add, the base is done with the free lines: note the slack in `notes/variants.md`, say so once,
+   and move on.
 5. Record the page-1 line count from `measure.py` in `notes/variants.md`.
 6. If the workspace is a git repository, commit. If the user created the private backup in
    step 2, push this first commit: `git push -u origin HEAD`.

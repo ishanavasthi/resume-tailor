@@ -1,6 +1,6 @@
 import json
 
-from helpers import run_script
+from helpers import SKILL, run_script
 import init_workspace as iw
 
 EXPECTED = ("AGENTS.md", "CLAUDE.md", ".gitignore", "notes/facts.md", "notes/variants.md",
@@ -105,3 +105,11 @@ def test_finder_litter_is_not_copied(tmp_path, monkeypatch):
     ws = tmp_path / "resume"
     assert iw.init_workspace(ws, "Jordan Lee") == [ws / "notes" / "facts.md"]
     assert not (ws / ".DS_Store").exists()
+
+
+def test_workspace_gitignore_ignores_the_preview_the_skill_writes(tmp_path):
+    ws = tmp_path / "resume"
+    assert run_script("init_workspace.py", ws, "--name", "Jordan Lee").returncode == 0
+    ignored = (ws / ".gitignore").read_text().splitlines()
+    assert "preview.png" in ignored
+    assert "--png preview.png" in (SKILL / "SKILL.md").read_text(encoding="utf-8")

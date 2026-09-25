@@ -84,3 +84,22 @@ def test_text_report_names_the_pdf(tmp_path):
     proc = run_script("measure.py", make_tex(tmp_path, "resume.tex"), "--engine", ENGINE)
     first = proc.stdout.splitlines()[0]
     assert first.startswith("pdf: ") and first.endswith("resume.pdf")
+
+
+def one_page(widest=121, tails=()):
+    return measure.Measurement(pdf="resume.pdf", pages=1, lines_per_page=[20], words_per_page=[200],
+                               widest_line=widest, spill_lines=0, spill_text=[], slack_lines=(26, 28),
+                               short_tails=list(tails))
+
+
+def test_clean_page_report_reads_as_information_not_a_warning():
+    report = measure.format_report(one_page(), (46, 48), 110)
+    line = next(ln for ln in report.splitlines() if "121" in ln)
+    assert line.startswith("longest text line: 121 chars")
+    assert "for reference" in line and "widest" not in line
+
+
+def test_short_tails_on_a_fitting_page_say_they_only_matter_when_trimming():
+    tail = {"page": 1, "index": 3, "line": "dashboard)", "after": FULL}
+    report = measure.format_report(one_page(tails=[tail]), (46, 48), 110)
+    assert "only matter if you need to trim" in report

@@ -50,6 +50,7 @@ Apply nothing until the user picks. If they want a mix, build that mix.
 
 ## 5. Apply and re-verify
 
-Apply the chosen package, run `verify.py`, and read the PNG. If it still overflows, measure again
-and report; do not keep trimming on your own. If the user's choice reflects a standing rule
-("always keep the statistics bullets"), record it under locked decisions in `notes/variants.md`.
+Apply the chosen package, run `verify.py` with `--png preview.png`, and read the PNG. If it
+still overflows, measure again and report; do not keep trimming on your own. If the user's
+choice reflects a standing rule ("always keep the statistics bullets"), record it under locked
+decisions in `notes/variants.md`.

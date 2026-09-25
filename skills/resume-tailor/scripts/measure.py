@@ -97,7 +97,8 @@ def format_report(m: Measurement, capacity_lines, capacity_chars) -> str:
     out = [f"pdf: {m.pdf}", f"pages: {m.pages}"]
     for n, (lines, words) in enumerate(zip(m.lines_per_page, m.words_per_page), 1):
         out.append(f"page {n}: {lines} lines, {words} words")
-    out.append(f"widest line: {m.widest_line} chars (a full line is about {capacity_chars})")
+    out.append(f"longest text line: {m.widest_line} chars, for reference (wrapped bullet text runs about "
+               f"{capacity_chars} per line; a heading with its date on the right can run longer)")
     if m.pages > 1:
         out.append(f"OVERFLOW: {m.spill_lines} lines past page 1. This text fell off page 1:")
         out.extend(f"  | {ln}" for ln in m.spill_text)
@@ -106,7 +107,10 @@ def format_report(m: Measurement, capacity_lines, capacity_chars) -> str:
         out.append(f"fits on one page with about {lo}-{hi} lines of slack "
                    f"(capacity {capacity_lines[0]}-{capacity_lines[1]} lines)")
     if m.short_tails:
-        out.append("short tails (trim a few words from that bullet to win back a whole line):")
+        if m.pages > 1:
+            out.append("short tails (trim a few words from that bullet to win back a whole line):")
+        else:
+            out.append("short tails (these only matter if you need to trim; each costs a whole line):")
         out.extend(f'  page {t["page"]}: "{t["line"]}" ends the line "...{t["after"][-50:]}"'
                    for t in m.short_tails)
     out.append("note: line counts come from extracted text; confirm any trim by rebuilding.")

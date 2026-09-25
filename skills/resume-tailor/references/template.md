@@ -12,6 +12,8 @@ another engine. Never remove them from the source.
 About **105-113 characters** per full-width line and **46-48 lines** per page, counted the way
 `measure.py` counts (lines of extracted text). A bullet costs about one line per 105 characters.
 The name, the contact line, each section title, and each entry heading cost a line each.
+`measure.py` also prints the longest extracted line for reference. An entry heading with its
+date on the right extracts as one line and can run well past 113 characters; that is normal.
 
 ## Commands
 
@@ -28,6 +30,11 @@ A project heading with two links:
 
     \resumeProjectHeading
         {\textbf{Name: Short Pitch} $|$ \href{https://github.com/user/repo}{\underline{View Project}} $|$ \href{https://demo.example}{\underline{Live Demo}}}{}
+
+A project with no confirmed public URL gets no link at all, never a placeholder:
+
+    \resumeProjectHeading
+        {\textbf{Name: Short Pitch}}{}
 
 A project written as its heading alone, with no bullet list, costs one line. That is the usual
 first step when a project has to shrink.

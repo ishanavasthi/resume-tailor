@@ -54,17 +54,19 @@ Test every changed bullet: could the user defend this sentence, word for word, i
 
 ## 6. Build and verify
 
-    python3 <skill>/scripts/verify.py tailored/Resume-<Company>.tex
+    python3 <skill>/scripts/verify.py tailored/Resume-<Company>.tex --png preview.png
 
-Fix every failure, then read the PNG. If it overflows, stop and follow `overflow.md`. If more than
-about 3 lines are free (`measure.py` reports the slack), tell the user and offer real content to
-fill them.
+Fix every failure, then read `preview.png`. If it overflows, stop and follow `overflow.md`. If
+more than about 3 lines are free (`measure.py` reports the slack), tell the user how many and
+offer real content to fill them: another project or a bullet from `notes/facts.md`. If they have
+nothing to add, the page is done with the free lines: say so once in the report, do not pad,
+and do not keep asking.
 
 ## 7. Save and record
 
 When `verify.py` passes and you have read the page:
 
-    python3 <skill>/scripts/verify.py tailored/Resume-<Company>.tex --save pdfs/<First>_<Last>_Resume_<Company>_<Role>.pdf
+    python3 <skill>/scripts/verify.py tailored/Resume-<Company>.tex --png preview.png --save pdfs/<First>_<Last>_Resume_<Company>_<Role>.pdf
 
 Then add a row to the tailored copies table in `notes/variants.md`, update `notes/roles.md` if
 you researched, and commit if the workspace is a git repository.
@@ -72,4 +74,25 @@ you researched, and commit if the workspace is a git repository.
 ## 8. Report
 
 Tell the user, briefly: the PDF path; what you changed and why (reordered, reworded, swapped);
-every gap from step 4; anything you were unsure about. Offer the PNG or the PDF to look at.
+every gap from step 4; any project shown without a link because no URL is confirmed; anything
+you were unsure about. Offer the PNG or the PDF to look at.
+
+## Changing a resume after it is saved
+
+When the user asks to add, change, or remove something on a resume that already exists ("add a
+bullet about X to the internship"):
+
+1. **Back it first.** Every new claim needs a confirmed facts entry (`facts.md`). If the facts
+   file does not cover it, ask for what a bullet needs: what they did, when, and any number with
+   its source. Record what they said under that entry's **Pending** field, and write nothing on
+   the page until they confirm the updated entry. If the only fact behind the request is already
+   on the page, say so instead of restating it in a second bullet.
+2. **Pick the file.** A change for one application goes in that company's tailored copy. If that
+   copy was already sent, ask whether this is for a new application; if it is, make a new copy
+   (step 3) and leave the sent one as the record. Edit a base only when the user asks for the
+   base itself.
+3. **Rebuild and verify**, as in step 6. If it overflows, stop and follow `overflow.md`: new
+   content never pushes other content off the page without the user's pick.
+4. **Re-save** with `--save` to the same PDF path as in step 7; it overwrites the old PDF. Update
+   the row in `notes/variants.md` and commit if the workspace is a git repository.
+5. **Report** what changed, and anything you held back as pending and why.

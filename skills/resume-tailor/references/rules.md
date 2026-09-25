@@ -56,7 +56,8 @@ bullets whose last line is a single word.
 
 A second link on one entry may carry a specific label (`Notebook`, `Paper`, `Case Study`) when
 none of the three fits. `verify.py` warns on any other label in the Projects section so you look
-at it. Never label a recording `Live Demo`.
+at it. Never label a recording `Live Demo`. A project with no confirmed URL gets no link at all
+(`facts.md`).
 
 ## 9. Name the gaps
 

@@ -23,7 +23,29 @@ The facts file settles, once and with the user, what each piece of work is and i
     - **Honest ceiling:** a working inventory tool used by one shop. Never "inventory platform"
       or "used by retailers": there is one user.
     - **Not yet true:** multi-shop accounts are designed but not built; CSV export is disabled.
+    - **Pending:** none.
     - **Confirmed by user:** 2026-01-10.
+
+A role goes under `## Experience` with the same fields plus **Work**, what the user did, in their
+own words:
+
+    ### Data Intern, Example Freight Co.
+
+    - **What it is:** a summer internship, Jun 2025 to Aug 2025, remote.
+    - **Source:** the user's own account. Employer-owned code: never linked on the page.
+    - **Stack:** Python, SQL, Airflow.
+    - **Work:** rewrote the nightly shipment report as an Airflow job with row-count checks.
+    - **Numbers:** report runtime from 40 to 6 minutes (the team's job dashboard).
+    - **Honest ceiling:** an intern who rebuilt one report pipeline. Never "led the data
+      platform" or "owned the warehouse".
+    - **Not yet true:** nothing else about this role is on record.
+    - **Pending:** 2026-01-12, the user mentioned joining the on-call rotation; asked for dates
+      and what they handled, no answer yet.
+    - **Confirmed by user:** 2026-01-10.
+
+When a project has no public URL the user has confirmed, the Source field says so ("no public
+URL confirmed"), and the project goes on the page with no link at all. Tell the user in the
+report, and log it in `notes/gaps.md` if a link would help for the role.
 
 The fields that do the most work:
 
@@ -33,6 +55,18 @@ The fields that do the most work:
   employer report) does not go on a page.
 - **Not yet true.** Features that are planned, stubbed, disabled, or broken today. Code that is
   commented out is not a feature.
+- **Pending.** Things the user has mentioned that are not yet confirmed, or that lack what a
+  bullet needs (what they did, when, a number's source). Date each one. Nothing under Pending
+  goes on a page; ask for the missing detail, and move it into the entry once the user confirms.
+
+## What counts as confirmed
+
+An entry is confirmed when the user has read it and said yes, after any corrections. Record that
+date in **Confirmed by user**. Silence is not confirmation, and neither is "they did not correct
+it". When most of an entry comes from reading the code rather than from the user, show it in
+full and ask plainly: "Is every line of this right?" If they confirm only part, keep the rest
+under **Pending**. An entry with no confirmation date is a draft: nothing from it goes on a
+page. A later change to an entry needs its own yes and a new date.
 
 ## Reading a repository honestly
 
@@ -48,7 +82,9 @@ The fields that do the most work:
   not go on the page.
 - Rewording toward the job description is expected. Going past the honest ceiling is not.
 - When the user tells you something new about their work, update the entry first, get it
-  confirmed, then use it.
+  confirmed, then use it. Until then it sits under **Pending**, never on the page.
+- When the user asks for a bullet whose only backing fact is already on the page, say so rather
+  than restating the same fact in a second bullet.
 
 ## When the user builds something new
 
