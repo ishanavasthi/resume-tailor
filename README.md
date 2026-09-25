@@ -19,7 +19,7 @@ company and role, still on one page, with every claim traceable and every gap sa
 - **Bases stay clean.** Each application gets its own copy, so your base resume stays neutral.
 - **No em-dashes, plain sentences, honest link labels** (`View Project`, `Live Demo`, `Demo Video`).
 - **Gaps said out loud.** A requirement with nothing behind it is reported, not papered over.
-- **Look before done.** Every build renders page 1 to an image, and the agent reads it.
+- **Look before done.** Every verify run renders page 1 to an image, and the agent reads it.
 
 ## Install
 
@@ -59,6 +59,28 @@ Ask your agent in plain words:
       assets/         the LaTeX template and the workspace starter files
 
 Your data never goes in this repository. The workspace the skill creates is yours, and private.
+
+### Your workspace
+
+Setup creates a folder of your own, outside this repository:
+
+    AGENTS.md         instructions any agent reads on entering the folder
+    CLAUDE.md         points Claude Code at AGENTS.md
+    bases/            your base resumes, one per role family, never tailored in place
+    tailored/         one copy per application: Resume-<Company>.tex
+    pdfs/             finished PDFs: <First>_<Last>_Resume_<Company>_<Role>.pdf
+    notes/
+      facts.md        what each project and job actually is; every claim traces here
+      variants.md     what each base contains, and the decisions locked in so far
+      roles.md        company and role research
+      gaps.md         job requirements with nothing behind them, and other open risks
+
+To create one by hand, without an agent:
+
+    uv run skills/resume-tailor/scripts/init_workspace.py ~/resume --name "First Last" --from-template
+
+`--from-template` is optional: it seeds `bases/Resume.tex` from the template. The script never
+overwrites an existing file.
 
 ## The scripts on their own
 

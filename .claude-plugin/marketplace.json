@@ -1,6 +1,7 @@
 {
   "name": "resume-tailor",
   "owner": { "name": "Ishan Avasthi" },
+  "description": "The resume-tailor agent skill: one-page LaTeX resumes tailored to a job description from confirmed facts.",
   "plugins": [
     {
       "name": "resume-tailor",
