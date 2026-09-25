@@ -1,0 +1,11 @@
+{
+  "name": "resume-tailor",
+  "owner": { "name": "Ishan Avasthi" },
+  "plugins": [
+    {
+      "name": "resume-tailor",
+      "source": ".",
+      "description": "Tailor a one-page LaTeX resume to a job description, using only facts confirmed from your own GitHub repositories."
+    }
+  ]
+}

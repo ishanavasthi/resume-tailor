@@ -1,0 +1,10 @@
+{
+  "name": "resume-tailor",
+  "version": "0.1.0",
+  "description": "Tailor a one-page LaTeX resume to a job description, using only facts confirmed from your own GitHub repositories.",
+  "author": { "name": "Ishan Avasthi", "url": "https://github.com/ishanavasthi" },
+  "homepage": "https://github.com/ishanavasthi/resume-tailor",
+  "repository": "https://github.com/ishanavasthi/resume-tailor",
+  "license": "MIT",
+  "keywords": ["resume", "latex", "job-application", "ats", "agent-skill"]
+}

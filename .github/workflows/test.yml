@@ -1,0 +1,35 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [pdflatex, tectonic]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+      - name: Install TeX Live
+        if: matrix.engine == 'pdflatex'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base texlive-latex-recommended texlive-latex-extra \
+            texlive-fonts-recommended poppler-utils
+      - name: Install tectonic
+        if: matrix.engine == 'tectonic'
+        uses: wtfjoke/setup-tectonic@v4
+      - run: pip install -r requirements-dev.txt
+      - name: Tests
+        env:
+          RESUME_TAILOR_ENGINE: ${{ matrix.engine }}
+        run: pytest -q
+      - name: Template passes verify
+        run: python skills/resume-tailor/scripts/verify.py skills/resume-tailor/assets/template.tex --engine ${{ matrix.engine }} --allow-placeholders
