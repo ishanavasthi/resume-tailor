@@ -58,8 +58,9 @@ Read `references/template.md` before the first `.tex` edit in a session.
 | `measure.py FILE.tex` | Lines per page, the text that spilled, slack, and short tails, for sizing trims. |
 | `extract_pdf.py FILE.pdf` | Text from an old resume PDF, for setup. |
 
-Exit codes: `0` pass, `1` a check failed, `2` a missing tool, bad input, or a LaTeX error. Add
-`--json` for machine-readable output.
+Exit codes: `0` pass; `1` a check failed or the script refused (overflow, no text in the PDF,
+workspace clash); `2` a missing tool, bad input, or a LaTeX error. Add `--json` for
+machine-readable output.
 
 ## Done means
 

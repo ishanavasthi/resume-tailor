@@ -23,7 +23,7 @@ the user. Never quietly bend one base into another family.
 
 ## 3. Copy it
 
-    cp bases/Resume.tex tailored/Resume-<Company>.tex
+    cp bases/<base picked in step 2> tailored/Resume-<Company>.tex
 
 If that file exists, ask whether to overwrite it or add the role (`Resume-<Company>-<Role>.tex`).
 A copy that was already sent is a record of what went out; do not reuse it for a new
