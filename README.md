@@ -56,14 +56,50 @@ scripts run from wherever it lands.
   your repositories
 - Optional: poppler's `pdftoppm` for page previews (`pypdfium2` is the fallback)
 
-## Use it
+## First prompt
 
-Ask your agent in plain words:
+After installing, open your agent in the folder where you want the workspace (or anywhere; it
+will ask) and paste this:
 
-    Set up my resume workspace.
+    Use the resume-tailor skill to set up my resume workspace from the beginning.
+    Check the tools it needs (Python, a TeX engine, pypdf, a page renderer, the GitHub CLI) and
+    give me the install commands for anything missing before going on. Check that gh is logged
+    in; if not, tell me and wait. Then ask me, a few questions at a time, where the workspace
+    should live, my name, and whether I am starting from an existing LaTeX resume, an old PDF,
+    or nothing. Build the facts file from my GitHub repositories and confirm each entry with me
+    before you use it. Finish with a verified one-page base resume and tell me what you built,
+    what is on the page, and what is still missing.
+
+In Claude Code, `Set up my resume workspace.` is enough on its own: the skill's description
+matches it and the setup steps do the rest. The longer prompt is for agents that pick skills
+less eagerly, and it makes the agent say what it is about to do before it does it.
+
+If you already have a workspace, open the agent inside that folder; its `AGENTS.md` points the
+agent at the skill and your notes.
+
+## Then
+
+Each of these is a complete request. Paste a job description or a link where shown.
+
     Tailor my resume for this job: <paste the description or a link>
-    My resume spills onto a second page.
-    What should I build to get more backend roles?
+    Tailor my resume for the Backend Engineer role at Northwind Logistics: <link>
+
+    My resume spills onto a second page. Measure it and give me trim options.
+
+    Add a bullet to my internship about the dashboard work I did.
+    Remove the StudyBuddy project from the Northwind copy and use the space for testing work.
+
+    I shipped a new project: <repo link>. Add it to my facts file and tell me where it fits.
+    Correct a fact: the FleetPing load test was 1,500 pings per second, not 2,000.
+
+    Which of my confirmed projects best covers this requirement: <paste one line of the JD>
+    What should I build next to get more backend roles? Use my gaps file.
+
+    Start a second base for data science roles from my current one.
+    I have an old PDF of my resume at ~/Downloads/resume.pdf; use it as the starting point.
+
+What you will always get back: the PDF path, what changed, and the requirements the page does
+not back. What you will never get: a cut you did not choose, a claim you did not confirm.
 
 ## Layout
 
